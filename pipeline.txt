@@ -13,7 +13,7 @@ pipeline{
                script{
                def scannerHome = tool 'sonar';
                withSonarQubeEnv(credentialsId: 'sonar-cred') {
-                   sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=your_project_key -Dsonar.sources=your_source_code_directory" 
+                   sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=netflix-clone" 
                }
                } 
 
