@@ -23,13 +23,14 @@ pipeline{
        stage('docker-deployment'){
             
           steps{
-            
+            script{
              sh "docker build --build-arg TMDB_V3_API_KEY='9798539738930f7739c20fb322c9ac7e' -t sai411/netflix-clone ."
              docker.withRegistry('', 'docker-cred'){
                         sh "docker push sai411/netflix-clone"
                     }
              sh "docker run -dit -p 9666:80  --name=netflix-clone sai411/netflix-clone"
           }
+         }
 
 
 
