@@ -20,25 +20,27 @@ pipeline{
             }
        }
      
-       stage('docker-deployment'){
+       stage('docker-image'){
             
           steps{
             script{
-             sh "docker build --build-arg TMDB_V3_API_KEY='9798539738930f7739c20fb322c9ac7e' -t sai411/netflix-clone ."
-             docker.withRegistry('', 'docker-cred'){
-                        sh "docker push sai411/netflix-clone"
-                    }
-             sh "docker run -dit -p 9666:80  --name=netflix-clone sai411/netflix-clone"
-          }
-         }
-
-
+                DOCKER_IMAGE = "sai411/netflix-clone:${env.BUILD_NUMBER}"
+                sh "docker build -t ${env.BUILD_NUMBER} ."
+                def docker_image = docker.image("${DOCKER_IMAGE}")
+                docker.withRegistry('', 'docker-cred')
+                {
+                docker.push(docker_image)
+                }
+             }
+           }
 
        }
-
+     stage('kubernetes deployment'){
+       steps{
+       sh "kubectl apply -f kubernetes/deployment.yaml"
+       sh "kubectl apply -f service.yaml"
    }
+}
 
-
-
-
+}
 }
