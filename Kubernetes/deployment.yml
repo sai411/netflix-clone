@@ -1,21 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: netflix-app
-  labels:
-    app: netflix-app
+    name: netflix-clone
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: netflix-app
-  template:
-    metadata:
-      labels:
-        app: netflix-app
-    spec:
-      containers:
-      - name: netflix-app
-        image: nasi101/netflix:latest
-        ports:
-        - containerPort: 80
+    replicas: 2
+    selector:
+       matchLabels:
+         app: netflix-clone
+    template:
+       metadata:
+         name: netflix-clone
+         labels:
+             app: netflix-clone
+       spec:
+           containers:
+            - name: netflix-clone
+              image: sai411/netflix-clone
+              env:
+                - name: TMDB_V3_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: api-secret
+                      key: TMDB_V3_API_KEY
+              ports:
+                - containerPort: 80
