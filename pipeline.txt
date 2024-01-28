@@ -21,15 +21,17 @@ pipeline{
        }
      
        stage('docker-image'){
-            
+            environment {
+              DOCKER_IMAGE = "sai411/netflix-clone:${env.BUILD_NUMBER}"
+            }
           steps{
             script{
-                DOCKER_IMAGE = "sai411/netflix-clone:${env.BUILD_NUMBER}"
+               
                 sh "docker build -t ${env.BUILD_NUMBER} ."
                 def docker_image = docker.image("${DOCKER_IMAGE}")
                 docker.withRegistry('', 'docker-cred')
                 {
-                docker.push(docker_image)
+                docker.push()
                 }
              }
            }
